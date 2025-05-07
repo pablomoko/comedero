@@ -18,6 +18,9 @@ const int ledPin = D1;
 const char* configFile = "/config.json";
 const char* horariosFile = "/horarios.json";
 
+unsigned long tiempoAperturaInicio = 0;
+bool comederoAbierto = false;
+
 // Estructura de configuración
 struct Config {
   String mqtt_host;
@@ -30,17 +33,24 @@ Config config;
 // Control del comedero (LED)
 // ----------------------
 void abrirComedero(int tiempoApertura = 3) {  // tiempoApertura en segundos
-  Serial.println("Comedero abierto (LED encendido)");
-  digitalWrite(ledPin, HIGH);
-  delay(tiempoApertura * 1000);  // Mantener abierto el tiempo especificado
-  cerrarComedero();
+  if (!comederoAbierto) {
+    Serial.println("Comedero abierto (LED encendido)");
+    digitalWrite(ledPin, HIGH);
+    tiempoAperturaInicio = millis();  // Guarda el tiempo de inicio
+    comederoAbierto = true;  // Marca que el comedero está abierto
+  }
+
+  // Verifica si el tiempo de apertura ha transcurrido
+  if (comederoAbierto && millis() - tiempoAperturaInicio >= tiempoApertura * 1000) {
+    cerrarComedero();
+  }
 }
 
 void cerrarComedero() {
   Serial.println("Comedero cerrado (LED apagado)");
   digitalWrite(ledPin, LOW);
+  comederoAbierto = false;  // Marca que el comedero está cerrado
 }
-
 // ----------------------
 // Horarios
 // ----------------------
