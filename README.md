@@ -61,19 +61,7 @@ Si no hay configuración previa, se abre un portal WiFi llamado `ComederoSetup`.
 - Host y puerto MQTT
 - Client ID MQTT
 
-## 🚀 Subida a GitHub
-
-### Pasos rápidos:
-```bash
-git init
-git add .
-git commit -m "Primer commit - comedero automático"
-git remote add origin https://github.com/usuario/repositorio.git
-git push -u origin main
-```
-
-> 🔁 Reemplazá `usuario/repositorio.git` por el nombre real de tu repo
 
 ## 👨‍💻 Autor
 
-Desarrollado por [Tu Nombre] – Proyecto ESP8266 para control de comedero automático por red.
+Desarrollado por Pablo A. Mokorel – Proyecto ESP8266 para control de comedero automático por red.
