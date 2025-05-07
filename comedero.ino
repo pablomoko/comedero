@@ -18,6 +18,7 @@ const int ledPin = D1;
 const char* configFile = "/config.json";
 const char* horariosFile = "/horarios.json";
 
+int tiempoApertura = 3; 
 unsigned long tiempoAperturaInicio = 0;
 bool comederoAbierto = false;
 
@@ -32,19 +33,23 @@ Config config;
 // ----------------------
 // Control del comedero (LED)
 // ----------------------
-void abrirComedero(int tiempoApertura = 3) {  // tiempoApertura en segundos
+void abrirComedero(int nuevoTiempoApertura = 3) {
+  tiempoApertura = nuevoTiempoApertura; // <- Esto es lo que faltaba
   if (!comederoAbierto) {
     Serial.println("Comedero abierto (LED encendido)");
     digitalWrite(ledPin, HIGH);
-    tiempoAperturaInicio = millis();  // Guarda el tiempo de inicio
-    comederoAbierto = true;  // Marca que el comedero está abierto
+    tiempoAperturaInicio = millis();
+    comederoAbierto = true;
   }
+}
 
+void verificarTiempoApertura() {
   // Verifica si el tiempo de apertura ha transcurrido
   if (comederoAbierto && millis() - tiempoAperturaInicio >= tiempoApertura * 1000) {
     cerrarComedero();
   }
 }
+
 
 void cerrarComedero() {
   Serial.println("Comedero cerrado (LED apagado)");
@@ -296,5 +301,7 @@ void loop() {
 
   timeClient.update();
   setTime(timeClient.getEpochTime());
+  
   verificarHorarios();
+  verificarTiempoApertura();  // Verifica si el tiempo de apertura ha pasado
 }
