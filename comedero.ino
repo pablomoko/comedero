@@ -207,16 +207,13 @@ void setup() {
   mqttClient.setServer(config.mqtt_host.c_str(), config.mqtt_port);
   mqttClient.setCallback(mqttCallback);
 
-  Serial.println("Conectando a MQTT...");
-  while (!mqttClient.connected()) {
-    if (mqttClient.connect(config.mqtt_client_id.c_str())) {
-      Serial.println("Conectado a MQTT");
-      mqttClient.subscribe("comedero/control");
-      mqttClient.subscribe("comedero/horarios");
-    } else {
-      Serial.print(".");
-      delay(1000);
-    }
+  // Aquí, en lugar de bloquear con la conexión MQTT, solo intentamos conectar una vez y seguimos con el servidor web
+  if (mqttClient.connect(config.mqtt_client_id.c_str())) {
+    Serial.println("Conectado a MQTT");
+    mqttClient.subscribe("comedero/control");
+    mqttClient.subscribe("comedero/horarios");
+  } else {
+    Serial.println("No se pudo conectar a MQTT, el servidor web continuará funcionando.");
   }
 
   cargarHorarios();
